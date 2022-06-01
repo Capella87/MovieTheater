@@ -22,7 +22,7 @@ import javax.swing.SwingConstants;
 import java.awt.Font;
 
 
-public class Modify extends JFrame {
+public class Modify extends JDialog {
     
        JTextField tf1 = new JTextField(50);
        JTextField tf2 = new JTextField(50);
@@ -37,7 +37,7 @@ public class Modify extends JFrame {
         
        public Modify(Database db) {
            
-           this.db = db;
+           this.db = new Database();
            setTitle("테이블 수정");
            setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
                      
@@ -153,21 +153,28 @@ public class Modify extends JFrame {
             
             c.add(new JLabel("<쿼리 작성 후 Enter를 누르시오>"));
             tf3.addActionListener(new ActionListener() {
-
-                PreparedStatement pstmt = null;
                 
                 @Override
                 public void actionPerformed(ActionEvent e) {                
                     
                     JTextField t = (JTextField)e.getSource();
                     SQL = t.getText();
-                    String result = SQL_table  + " " + SQL;
+                    String result = SQL_table + SQL;
                     
-                    System.out.print(result);
+                    System.out.println(result);
                     try {
-                        pstmt = db.con.prepareStatement(result); // SQL문 처리용 Statement 객체 생성
+                        var pstmt = db.con.prepareStatement(result); // SQL문 처리용 Statement 객체 생성
                         pstmt.executeUpdate();
-                    } catch (SQLException e1) { JOptionPane.showMessageDialog(null, "SQL문 실행 오류"); }
+                    } catch (Exception e1) {
+                        JOptionPane.showMessageDialog(null, "SQL문 실행 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                        e1.printStackTrace();
+                    }
+                    /*
+                    catch (SQLException e2) {
+                        JOptionPane.showMessageDialog(null, "SQL문 실행 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
+                    e2.printStackTrace();
+                    }
+                    */
                     t.setText("");
                 }
             });
@@ -175,6 +182,6 @@ public class Modify extends JFrame {
             c.add(tf3);
             
             setSize(600, 300);
-            setVisible(true);   
+  
         }
       }
