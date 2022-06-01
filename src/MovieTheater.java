@@ -11,7 +11,15 @@ class Database {
     
     public Database()
     {
-        con = null;
+        try {
+            openCon();
+        }
+        catch (Exception e) {
+            System.out.println("데이터베이스에 연결할 수 없습니다.");
+            con = null;
+            e.printStackTrace();
+        }
+        
     }
     
     void openCon() throws Exception {
@@ -159,6 +167,7 @@ public class MovieTheater
     private JFrame frame;
     private static Database db;
     private Administrator admin;
+    private Customer customer;
 
     /**
      * Launch the application.
@@ -217,6 +226,16 @@ public class MovieTheater
         JButton btnNewButton = new JButton("회원");
         btnNewButton.setFont(new Font("Gulim", Font.BOLD, 20));
         btnNewButton.setBounds(387, 162, 186, 63);
+        btnNewButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                customer = new Customer(db);
+                customer.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                customer.setVisible(true);
+                customer.toFront();
+                customer.requestFocus();
+                customer.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            }
+        });
         panel.add(btnNewButton);
         
         JButton btnNewButton_1 = new JButton("관리자");
