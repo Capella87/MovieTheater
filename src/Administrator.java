@@ -10,6 +10,9 @@ import javax.swing.JOptionPane;
 
 import java.awt.Component;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.awt.event.ActionEvent;
 import java.awt.GridLayout;
 import javax.swing.SwingConstants;
@@ -26,6 +29,10 @@ public class Administrator extends JDialog
         @Override
         public void actionPerformed(ActionEvent e) {
             Modify sub = new Modify(db);
+            sub.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+            sub.setVisible(true);
+            sub.toFront();
+            sub.requestFocus();
         }
         
      }
@@ -45,15 +52,6 @@ public class Administrator extends JDialog
             lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
             lblNewLabel.setBounds(265, 47, 99, 55);
             contentPanel.add(lblNewLabel);
-        }
-        {
-            JButton btnNewButton = new JButton("DB 수정");
-            btnNewButton.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                }
-            });
-            btnNewButton.setBounds(270, 171, 94, 55);
-            contentPanel.add(btnNewButton);
         }
         {
             JButton btnNewButton = new JButton("초기화");
@@ -82,10 +80,20 @@ public class Administrator extends JDialog
             contentPanel.add(btnNewButton);
         }
         {
+            JButton btnNewButton = new JButton("DB 수정");
+            btnNewButton.addActionListener(new Action_modify()
+            );
+            btnNewButton.setBounds(270, 171, 94, 55);
+            contentPanel.add(btnNewButton);
+        }
+        {
             JButton btnNewButton = new JButton("테이블 조회");
             btnNewButton.setBounds(452, 171, 105, 55);
             contentPanel.add(btnNewButton);
-            btnNewButton.addActionListener(new Action_modify());
+            btnNewButton.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                }
+            });
         }
         {
             JPanel buttonPane = new JPanel();
