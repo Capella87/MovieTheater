@@ -43,6 +43,7 @@ public class Administrator extends JDialog
         this.db = db;
         setBounds(100, 100, 617, 436);
         getContentPane().setLayout(new BorderLayout());
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
