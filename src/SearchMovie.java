@@ -1,10 +1,10 @@
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.util.*;
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.event.*;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -12,7 +12,7 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.Dimension;
-import java.util.*;
+
 
 public class SearchMovie extends JDialog
 {
@@ -23,6 +23,7 @@ public class SearchMovie extends JDialog
     private Map<String, String> map;
     private JTable resultTable;
     private JScrollPane scrollPane;
+    private ArrayList<Integer> movieIds;
 
     public SearchMovie(Database db)
     {
@@ -30,6 +31,7 @@ public class SearchMovie extends JDialog
         map = new HashMap<String, String>();
 
         setBounds(100, 100, 582, 432);
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -152,13 +154,11 @@ public class SearchMovie extends JDialog
             
             scrollPane = new JScrollPane();
             contentPanel.add(scrollPane, BorderLayout.CENTER);
-            
-            
-            
+         
             btnNewButton.addActionListener(new ActionListener() {
                 
 	   			Statement stmt = null;
-                
+
                 @Override
                 public void actionPerformed(ActionEvent e) {
 
@@ -186,6 +186,7 @@ public class SearchMovie extends JDialog
 	   					stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
 		  	  	        ResultSet rs=stmt.executeQuery(result);
 		  	  	        int resultCount = 0;
+                            
 		  	  	        while (rs.next()) {
 		  	  	            resultCount++;
 		  	  	        }
@@ -204,8 +205,11 @@ public class SearchMovie extends JDialog
                             }
                             
                             rs.first();
+                            movieIds = new ArrayList<Integer>();
+                            
                             for (int i = 0; i < resultCount; i++)
                             {
+                                movieIds.add(rs.getInt(1));
                                 // resultModel.setValueAt(rs.getInt(1), i, 1);
                                 for (int j = 2; j <= columnCount; j++) {
                                     resultModel.setValueAt(rs.getString(j), i, j - 2); // 주의
@@ -226,6 +230,7 @@ public class SearchMovie extends JDialog
                 }
             });
         }
+
         {
             JPanel buttonPane = new JPanel();
             buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
@@ -250,7 +255,15 @@ public class SearchMovie extends JDialog
                                 throw new Exception("영화를 선택하십시오.");
                             else {
                                 // 상영 시간 표시 테이블 창 표시
-                               
+                               // 영화 예매하기
+                               int colCount = resultTable.getColumnCount() - 1;
+                                Object[] target = new Object[colCount];
+                                for (int i = 1; i <= colCount; i++) {
+                                    target[i] = resultTable.getValueAt(lastSelectIdx, i); // !
+                                }
+                                var selScheduleWindow = new SelectSchedule(target, db, movieIds.get(lastSelectIdx));
+                                selScheduleWindow.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                                selScheduleWindow.setVisible(true);
                             }
                         } catch (Exception err) {
                             JOptionPane.showMessageDialog(null,
