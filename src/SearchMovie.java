@@ -65,7 +65,8 @@ public class SearchMovie extends JDialog
                     public void actionPerformed(ActionEvent e) {
                         JTextField t = (JTextField)e.getSource();
                         String name = t.getText();
-                        map.put("name", name);
+                        if (!name.equals(""))
+                            map.put("name", name);
 
                         t.setText("저장 완료");
                     }
@@ -90,7 +91,8 @@ public class SearchMovie extends JDialog
 	   			public void actionPerformed(ActionEvent e) {				
 	   				JTextField t = (JTextField)e.getSource();
 	   				String director = t.getText();
-                    map.put("director", director);
+	   				if (!director.equals(""))
+                        map.put("director", director);
 
                     t.setText("저장 완료");
 	   			}
@@ -114,7 +116,8 @@ public class SearchMovie extends JDialog
 	   				
 	   				JTextField t = (JTextField)e.getSource();
                     String actor = t.getText();
-                    map.put("actor", actor);
+                    if (!actor.equals(""))
+                        map.put("actor", actor);
 	   				
                     t.setText("저장 완료");
 	   			}
@@ -137,7 +140,8 @@ public class SearchMovie extends JDialog
 	   				
 	   				JTextField t = (JTextField)e.getSource();
 	   				String genre = t.getText();
-                    map.put("genre", genre);
+	   				if (!genre.equals(""))
+	   				    map.put("genre", genre);
                     
                     t.setText("저장 완료");
 	   			}
@@ -166,9 +170,10 @@ public class SearchMovie extends JDialog
                     int mapCount = map.size();
                     queryBuilder = new StringBuilder("SELECT * from movies ");
                     
+                    if (!map.isEmpty()) 
+                        queryBuilder.append("where ");
                     for (var entry : map.entrySet())
                     {
-                        queryBuilder.append("where ");
                         queryBuilder.append(entry.getKey());
                         queryBuilder.append(" = ");
                         queryBuilder.append("\'");
@@ -180,7 +185,7 @@ public class SearchMovie extends JDialog
                     }
 
                     String result = queryBuilder.toString();
-                    System.out.print(result);
+                    System.out.println(result);
                     
                     try {
 	   					stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
@@ -227,6 +232,7 @@ public class SearchMovie extends JDialog
                            e1.printStackTrace();
                         }
                     resultTable.setVisible(true);
+                    map.clear();
                 }
             });
         }
@@ -258,7 +264,7 @@ public class SearchMovie extends JDialog
                                // 영화 예매하기
                                int colCount = resultTable.getColumnCount() - 1;
                                 Object[] target = new Object[colCount];
-                                for (int i = 1; i <= colCount; i++) {
+                                for (int i = 1; i < colCount; i++) {
                                     target[i] = resultTable.getValueAt(lastSelectIdx, i); // !
                                 }
                                 var selScheduleWindow = new SelectSchedule(target, db, movieIds.get(lastSelectIdx));
