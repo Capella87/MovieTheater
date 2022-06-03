@@ -8,6 +8,8 @@ DROP TABLE IF EXISTS members;
 DROP TABLE IF EXISTS theaters;
 DROP TABLE IF EXISTS movies;
 
+
+
 -- movies Table Create SQL
 CREATE TABLE movies
 (
@@ -65,7 +67,7 @@ CREATE TABLE reservations
 
 ALTER TABLE reservations
     ADD CONSTRAINT FK_reservations_username_members_username FOREIGN KEY (username)
-        REFERENCES members (username) ON DELETE RESTRICT ON UPDATE RESTRICT;
+        REFERENCES members (username) ON DELETE CASCADE ON UPDATE CASCADE;
 
 
 -- seats Table Create SQL
@@ -97,7 +99,7 @@ CREATE TABLE schedules
 
 ALTER TABLE schedules
     ADD CONSTRAINT FK_schedules_movie_id_movies_movie_id FOREIGN KEY (movie_id)
-        REFERENCES movies (movie_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+        REFERENCES movies (movie_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE schedules
     ADD CONSTRAINT FK_schedules_theater_id_theaters_theater_id FOREIGN KEY (theater_id)
@@ -122,7 +124,7 @@ CREATE TABLE tickets
 
 ALTER TABLE tickets
     ADD CONSTRAINT FK_tickets_schedule_id_schedules_schedule_id FOREIGN KEY (schedule_id)
-        REFERENCES schedules (schedule_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+        REFERENCES schedules (schedule_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE tickets
     ADD CONSTRAINT FK_tickets_theater_id_theaters_theater_id FOREIGN KEY (theater_id)
@@ -134,7 +136,7 @@ ALTER TABLE tickets
 
 ALTER TABLE tickets
     ADD CONSTRAINT FK_tickets_reservation_id_reservations_reservation_id FOREIGN KEY (reservation_id)
-        REFERENCES reservations (reservation_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+        REFERENCES reservations (reservation_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE tickets
     ADD CONSTRAINT FK_tickets_username_members_username FOREIGN KEY (username)
