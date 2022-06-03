@@ -1,5 +1,13 @@
 use madang;
 
+DROP TABLE IF EXISTS tickets;
+DROP TABLE IF EXISTS reservations;
+DROP TABLE IF EXISTS seats;
+DROP TABLE IF EXISTS schedules;
+DROP TABLE IF EXISTS members;
+DROP TABLE IF EXISTS theaters;
+DROP TABLE IF EXISTS movies;
+
 -- movies Table Create SQL
 CREATE TABLE movies
 (
