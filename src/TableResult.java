@@ -71,10 +71,13 @@ public class TableResult extends AbstractTableModel
     @Override
     public boolean isCellEditable(int row, int column)
     {
+        /*
         if (column > 0)
             return model.isCellEditable(row, column - 1);
         else
             return true;
+       */
+        return (column == 0) ? true : false;
     }
 
     @Override
