@@ -8,36 +8,30 @@ import javax.swing.border.EmptyBorder;
 import java.awt.CardLayout;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class SelectSchedule extends JDialog
 {
 
     private final JPanel contentPanel = new JPanel();
+    private Object[] target;
+    private int targetColumnCount;
+    private Database db;
+    private int movieId;
 
-    /**
-     * Launch the application.
-     */
-    /*
-    public static void main(String[] args)
+    public SelectSchedule(Object[] targetToReserve, Database db, int movieId)
     {
-        try
-        {
-            SelectSchedule dialog = new SelectSchedule();
-            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-            dialog.setVisible(true);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
-    */
+        this.db = db;
+        target = targetToReserve;
+        targetColumnCount = target.length;
 
-    /**
-     * Create the dialog.
-     */
-    public SelectSchedule()
-    {
         setBounds(100, 100, 450, 300);
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
@@ -45,6 +39,28 @@ public class SelectSchedule extends JDialog
         {
             JPanel selectSchedule = new JPanel();
             contentPanel.add(selectSchedule, "selectSchedule");
+            selectSchedule.setLayout(new BorderLayout(0, 0));
+            
+            JScrollPane scrollPane = new JScrollPane();
+            selectSchedule.add(scrollPane, BorderLayout.CENTER);
+            
+            JLabel lblNewLabel = new JLabel("예매할 영화 시간");
+            lblNewLabel.setFont(new Font("Gulim", Font.BOLD, 16));
+            lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+            selectSchedule.add(lblNewLabel, BorderLayout.NORTH);
+         // target에서 영화 id로 시간을 조회해서 Table로 출력한다.
+            try {
+                var statement = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                String searchScheduleQuery = "";
+            }
+            catch (SQLException e) {
+                JOptionPane.showMessageDialog(null,
+                                    "SQL 쿼리 오류", "ERROR",
+                                    JOptionPane.ERROR_MESSAGE);
+                e.printStackTrace();
+                dispose();
+            }
+            
         }
         {
             JPanel completedReservation = new JPanel();
@@ -52,6 +68,7 @@ public class SelectSchedule extends JDialog
             {
                 JScrollPane scrollPane = new JScrollPane();
                 completedReservation.add(scrollPane);
+                
             }
         }
         {
@@ -71,5 +88,4 @@ public class SelectSchedule extends JDialog
             }
         }
     }
-
 }

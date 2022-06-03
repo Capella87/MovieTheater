@@ -25,6 +25,7 @@ public class Customer extends JDialog
         this.db = db;
         setBounds(100, 100, 450, 300);
         getContentPane().setLayout(new BorderLayout());
+        setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
         getContentPane().add(contentPanel, BorderLayout.CENTER);
         contentPanel.setLayout(null);
@@ -44,6 +45,9 @@ public class Customer extends JDialog
             JButton btnNewButton = new JButton("예매 조회");
             btnNewButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    var searchReservation = new SearchReservation(db);
+                    searchReservation.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                    searchReservation.setVisible(true);
                 }
             });
             btnNewButton.setBounds(252, 90, 85, 21);
