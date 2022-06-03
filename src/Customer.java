@@ -24,6 +24,7 @@ public class Customer extends JDialog
     {
         this.db = db;
         setBounds(100, 100, 450, 300);
+        setTitle("고객 패널");
         getContentPane().setLayout(new BorderLayout());
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -65,13 +66,13 @@ public class Customer extends JDialog
             buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
             getContentPane().add(buttonPane, BorderLayout.SOUTH);
             {
-                JButton cancelButton = new JButton("Close");
+                JButton cancelButton = new JButton("취소");
                 buttonPane.add(cancelButton);
                 cancelButton.addActionListener(new ActionListener() {
 
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        // this.();
+                        dispose();
                     }
                 });
             }

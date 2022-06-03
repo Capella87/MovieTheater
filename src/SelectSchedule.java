@@ -12,6 +12,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -82,8 +84,12 @@ public class SelectSchedule extends JDialog
                 getRootPane().setDefaultButton(confirmButton);
             }
             {
-                JButton cancelButton = new JButton("Cancel");
-                cancelButton.setActionCommand("Cancel");
+                JButton cancelButton = new JButton("취소");
+                cancelButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        dispose();
+                    }
+                });
                 buttonPane.add(cancelButton);
             }
         }

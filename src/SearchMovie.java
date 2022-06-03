@@ -280,6 +280,11 @@ public class SearchMovie extends JDialog
             {
                 JButton closeButton = new JButton("닫기");
                 closeButton.setActionCommand("Cancel");
+                closeButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        dispose();
+                    }
+                });
                 buttonPane.add(closeButton);
             }
         }

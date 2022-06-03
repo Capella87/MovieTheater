@@ -163,8 +163,13 @@ public class SearchReservation extends JDialog
                 getRootPane().setDefaultButton(okButton);
             }
             {
-                JButton cancelButton = new JButton("Cancel");
+                    JButton cancelButton = new JButton("취소");
                 cancelButton.setActionCommand("Cancel");
+                    cancelButton.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent e) {
+                            dispose(); 
+                        }
+                    });
                 buttonPane.add(cancelButton);
             }
         }

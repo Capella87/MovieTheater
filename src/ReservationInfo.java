@@ -9,6 +9,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
+import javax.swing.BoxLayout;
 
 public class ReservationInfo extends JDialog
 {
@@ -47,18 +51,18 @@ public class ReservationInfo extends JDialog
         }
         {
             JPanel buttonPane = new JPanel();
-            buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
             getContentPane().add(buttonPane, BorderLayout.SOUTH);
+            buttonPane.setLayout(new BorderLayout(0, 0));
             {
                 JButton okButton = new JButton("OK");
                 okButton.setActionCommand("OK");
+                okButton.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent e) {
+                        dispose();
+                    }
+                });
                 buttonPane.add(okButton);
                 getRootPane().setDefaultButton(okButton);
-            }
-            {
-                JButton cancelButton = new JButton("Cancel");
-                cancelButton.setActionCommand("Cancel");
-                buttonPane.add(cancelButton);
             }
         }
     }
