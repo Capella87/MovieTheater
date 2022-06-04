@@ -93,6 +93,9 @@ public class Administrator extends JDialog
             contentPanel.add(btnNewButton);
             btnNewButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
+                    var SearchAllTable = new SearchAllTable(db);
+                    SearchAllTable.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                    SearchAllTable.setVisible(true);
                 }
             });
         }
