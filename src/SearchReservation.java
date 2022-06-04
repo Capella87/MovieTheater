@@ -130,30 +130,32 @@ public class SearchReservation extends JDialog {
                                     for (int j = 1; j <= columnCount - 5; j++) {
                                         resultModel.setValueAt(rs.getString(j), i, j - 1); // 주의
                                     }
-                                    // t.movie_id, t.reservation_id, t.username
+                                    // t.movie_id, t.ticket_id, t.reservation_id, t.username, t.schedule_id
                                     bookingInfoObjects.add(new Object[] { (Object)rs.getInt(columnCount - 4), (Object)rs.getInt(columnCount - 3), (Object) rs.getInt(columnCount - 2),
                                             (Object) rs.getString(columnCount - 1), (Object) rs.getInt(columnCount) });
                                     rs.next();
                                 }
 
                                 wrapperModel = new TableResult(resultModel, "선택");
-
                                 resultTable = new JTable(wrapperModel);
                                 resultTable.addMouseListener(new MouseAdapter() {
+                                     
+                                    int lastSelectedIdx;
+                                    int clickCounts = 0;
+
                                     public void mouseClicked (MouseEvent e) {
-                                        
-                                        if (e.getClickCount() >= 2) {
-                                            var target = (JTable)e.getSource();
-                                            if (target.getSelectedColumn() == 0) return; // Ignore first column.
-                                            
-                                            // 예매 정보 띄우기; DB 정보 전달 필요
-                                            // var info = new ReservationInfo(db);
-                                            
+                                        var target = (JTable)e.getSource();
+                                        if (target.getSelectedColumn() == 0) return; // Ignore first column.
+
+                                        if (e.getClickCount() == 2) {
+                                             var info = new ReservationInfo(db, bookingInfoObjects.get(lastSelectedIdx));
+                                             info.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                                             info.setVisible(true);
                                         }
                                     }
                                 });
                                 scrollPane.setViewportView(resultTable);
-
+                                
                                 t.setText("저장 완료");
                                 resultTable.setVisible(true);
                             }
@@ -259,11 +261,9 @@ public class SearchReservation extends JDialog {
                                 else {
                                     try {
                                         // 예매 변경; 테이블에 있는 튜플 정보로 SQL로 검색해 찾고 다른 영화를 검색; 다른 영화가 없는 경우 메시지 띄우고 종료
-                                        
-                                        // 예매 변경 완료
-                                        JOptionPane.showMessageDialog(null, "예매가 정상적으로 변경되었습니다.", "알림",
-                                                JOptionPane.INFORMATION_MESSAGE);
-                                        wrapperModel.removeRow(lastSelectedIdx);
+                                        var choose = new ChooseAnotherMovie(db, bookingInfoObjects.get(lastSelectedIdx));
+                                        choose.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                                        choose.setVisible(true);
                                     }
                                     catch (Exception err) {
                                         JOptionPane.showMessageDialog(null, "예매 변경 실패", "ERROR",

@@ -223,14 +223,15 @@ public class SearchMovie extends JDialog
                             }
                             
                             var wrapperModel = new TableResult(resultModel, "선택");
-                            
                             resultTable = new JTable(wrapperModel);
                             scrollPane.setViewportView(resultTable);
                         }                   
-	   				} catch (SQLException e1) {
+	   				} 
+                    catch (SQLException e1) {
                            JOptionPane.showMessageDialog(null, "SQL문 실행 오류");
                            e1.printStackTrace();
-                        }
+                    }
+
                     resultTable.setVisible(true);
                     map.clear();
                 }
