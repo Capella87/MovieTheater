@@ -20,87 +20,73 @@ import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import java.util.*;
 
-public class TableResult extends AbstractTableModel
-{
+public class TableResult extends AbstractTableModel {
     private ArrayList<Boolean> checkBoxes = new ArrayList<>();
 
     private DefaultTableModel model;
     private String columnName;
-    
-    public TableResult(DefaultTableModel model, String columnName)
-    {
+
+    public TableResult(DefaultTableModel model, String columnName) {
         this.model = model;
         this.columnName = columnName;
-        
-        for (int i = 0; i < model.getRowCount(); i++)
-        {
+
+        for (int i = 0; i < model.getRowCount(); i++) {
             checkBoxes.add(false);
         }
-        
+
     }
+
     @Override
-    public String getColumnName(int column)
-    {
+    public String getColumnName(int column) {
         return (column > 0) ? model.getColumnName(column - 1) : columnName;
     }
 
     @Override
-    public int getRowCount()
-    {
+    public int getRowCount() {
         return model.getRowCount();
     }
 
     @Override
-    public int getColumnCount()
-    {
+    public int getColumnCount() {
         return model.getColumnCount() + 1;
     }
 
     @Override
-    public Object getValueAt(int row, int column)
-    {
+    public Object getValueAt(int row, int column) {
         if (column > 0)
             return model.getValueAt(row, column - 1);
-        else
-        {
+        else {
             Object value = checkBoxes.get(row);
             return (value == null) ? Boolean.FALSE : value;
         }
     }
 
     @Override
-    public boolean isCellEditable(int row, int column)
-    {
+    public boolean isCellEditable(int row, int column) {
         /*
-        if (column > 0)
-            return model.isCellEditable(row, column - 1);
-        else
-            return true;
-       */
+         * if (column > 0) return model.isCellEditable(row, column - 1); else return
+         * true;
+         */
         return (column == 0) ? true : false;
     }
 
     @Override
-    public void setValueAt(Object value, int row, int column)
-    {
+    public void setValueAt(Object value, int row, int column) {
         if (column > 0)
             model.setValueAt(value, row, column - 1);
-        else
-        {
-            checkBoxes.set(row, (Boolean)value);
+        else {
+            checkBoxes.set(row, (Boolean) value);
         }
 
         fireTableCellUpdated(row, column);
     }
 
     @Override
-    public Class getColumnClass(int column)
-    {
+    public Class getColumnClass(int column) {
         return (column > 0) ? model.getColumnClass(column - 1) : Boolean.class;
     }
 
-    public void removeRow(int row)
-    {
+    public void removeRow(int row) {
         checkBoxes.remove(row);
         fireTableRowsDeleted(row, row);
         model.removeRow(row);

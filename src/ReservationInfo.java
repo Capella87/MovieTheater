@@ -19,18 +19,18 @@ import javax.swing.JLabel;
 import java.awt.Dimension;
 import javax.swing.SwingConstants;
 import java.util.*;
-public class ReservationInfo extends JDialog
-{
+
+public class ReservationInfo extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     private Database db;
-    private StringBuilder queryBuilder = new StringBuilder ("select s.*, t.ticket_id, t.seat_id, t.reservation_id, t.username, t.status, t.standard_price, t.sale_price from schedules s, tickets t where s.schedule_id = ");
+    private StringBuilder queryBuilder = new StringBuilder(
+            "select s.*, t.ticket_id, t.seat_id, t.reservation_id, t.username, t.status, t.standard_price, t.sale_price from schedules s, tickets t where s.schedule_id = ");
     private String result;
     private Statement stmt;
     private JTable resultTable;
 
-    public ReservationInfo(Database db, Object[] bookingInfo)
-    {
+    public ReservationInfo(Database db, Object[] bookingInfo) {
         setTitle("상세 정보 조회");
         setBounds(100, 100, 450, 373);
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -41,7 +41,7 @@ public class ReservationInfo extends JDialog
         {
             JPanel panel = new JPanel();
             contentPanel.add(panel, BorderLayout.NORTH);
-            
+
             {
                 JLabel lblNewLabel = new JLabel("상영 정보");
                 lblNewLabel.setFont(new Font("Gulim", Font.BOLD, 15));
@@ -51,7 +51,7 @@ public class ReservationInfo extends JDialog
             panel.setLayout(new BorderLayout(0, 0));
             {
                 JScrollPane scrollPane = new JScrollPane();
-                            
+
                 queryBuilder.append(bookingInfo[4]);
                 queryBuilder.append(" and ");
                 queryBuilder.append("t.schedule_id = ");
@@ -64,34 +64,34 @@ public class ReservationInfo extends JDialog
                     ResultSet rs = stmt.executeQuery(result);
 
                     int resultCount = 0;
-					while (rs.next())
-					    resultCount++;
+                    while (rs.next())
+                        resultCount++;
 
-					ResultSetMetaData columns = rs.getMetaData();
-					int columnCount = columns.getColumnCount();
-					var resultModel = new DefaultTableModel(resultCount, 0);
+                    ResultSetMetaData columns = rs.getMetaData();
+                    int columnCount = columns.getColumnCount();
+                    var resultModel = new DefaultTableModel(resultCount, 0);
 
-					for (int i = 1; i <= columnCount; i++) {//
-                    	resultModel.addColumn(columns.getColumnName(i));
+                    for (int i = 1; i <= columnCount; i++) {//
+                        resultModel.addColumn(columns.getColumnName(i));
 
-						}
+                    }
 
-						rs.first();
+                    rs.first();
 
-						for (int i = 0; i < resultCount; i++) { //
-							for (int j = 1; j <= columnCount; j++) {
-								resultModel.setValueAt(rs.getString(j), i, j - 1); // 주의
-							}
-							rs.next();
-						}
+                    for (int i = 0; i < resultCount; i++) { //
+                        for (int j = 1; j <= columnCount; j++) {
+                            resultModel.setValueAt(rs.getString(j), i, j - 1); // 주의
+                        }
+                        rs.next();
+                    }
 
-						resultTable = new JTable(resultModel);
-						scrollPane.setViewportView(resultTable);
-                                            
+                    resultTable = new JTable(resultModel);
+                    scrollPane.setViewportView(resultTable);
+
                 } catch (SQLException e1) {
-						JOptionPane.showMessageDialog(null, "SQL문 실행 오류");
-						e1.printStackTrace();
-				}
+                    JOptionPane.showMessageDialog(null, "SQL문 실행 오류");
+                    e1.printStackTrace();
+                }
                 resultTable.setVisible(true);
                 panel.add(scrollPane, BorderLayout.CENTER);
             }

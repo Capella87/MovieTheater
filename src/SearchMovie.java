@@ -13,9 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.awt.Dimension;
 
-
-public class SearchMovie extends JDialog
-{
+public class SearchMovie extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     private static Database db;
@@ -25,8 +23,7 @@ public class SearchMovie extends JDialog
     private JScrollPane scrollPane;
     private ArrayList<Integer> movieIds;
 
-    public SearchMovie(Database db)
-    {
+    public SearchMovie(Database db) {
         this.db = db;
         map = new HashMap<String, String>();
 
@@ -63,7 +60,7 @@ public class SearchMovie extends JDialog
                 tf_name.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        JTextField t = (JTextField)e.getSource();
+                        JTextField t = (JTextField) e.getSource();
                         String name = t.getText();
                         if (!name.equals(""))
                             map.put("name", name);
@@ -73,95 +70,94 @@ public class SearchMovie extends JDialog
                 });
                 panel.add(tf_name);
             }
-            
+
             {
-            JLabel lblNewLabel = new JLabel("감독명");
-            lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-            lblNewLabel.setBounds(76, 68, 74, 19);
-            panel.add(lblNewLabel);
-        
-            JTextField tf_director = new JTextField();
-            tf_director.setColumns(10);
-            tf_director.setBounds(171, 68, 260, 19);
-            tf_director.addActionListener(new ActionListener() {
+                JLabel lblNewLabel = new JLabel("감독명");
+                lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+                lblNewLabel.setBounds(76, 68, 74, 19);
+                panel.add(lblNewLabel);
 
-			   PreparedStatement pstmt = null;
-	   		
-	   			@Override
-	   			public void actionPerformed(ActionEvent e) {				
-	   				JTextField t = (JTextField)e.getSource();
-	   				String director = t.getText();
-	   				if (!director.equals(""))
-                        map.put("director", director);
+                JTextField tf_director = new JTextField();
+                tf_director.setColumns(10);
+                tf_director.setBounds(171, 68, 260, 19);
+                tf_director.addActionListener(new ActionListener() {
 
-                    t.setText("저장 완료");
-	   			}
-	   			
-	   		});
-            panel.add(tf_director);
+                    PreparedStatement pstmt = null;
+
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        JTextField t = (JTextField) e.getSource();
+                        String director = t.getText();
+                        if (!director.equals(""))
+                            map.put("director", director);
+
+                        t.setText("저장 완료");
+                    }
+
+                });
+                panel.add(tf_director);
             }
 
             {
-            JLabel lblNewLabel_1 = new JLabel("배우명");
-            lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-            lblNewLabel_1.setBounds(76, 100, 74, 19);
-            panel.add(lblNewLabel_1);
-            
-            JTextField tf_actor = new JTextField();
-            tf_actor.setColumns(10);
-            tf_actor.setBounds(171, 97, 260, 19);
-            tf_actor.addActionListener(new ActionListener() {
-                @Override
-	   			public void actionPerformed(ActionEvent e) {				
-	   				
-	   				JTextField t = (JTextField)e.getSource();
-                    String actor = t.getText();
-                    if (!actor.equals(""))
-                        map.put("actor", actor);
-	   				
-                    t.setText("저장 완료");
-	   			}
-            });
-            panel.add(tf_actor);
+                JLabel lblNewLabel_1 = new JLabel("배우명");
+                lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+                lblNewLabel_1.setBounds(76, 100, 74, 19);
+                panel.add(lblNewLabel_1);
+
+                JTextField tf_actor = new JTextField();
+                tf_actor.setColumns(10);
+                tf_actor.setBounds(171, 97, 260, 19);
+                tf_actor.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        JTextField t = (JTextField) e.getSource();
+                        String actor = t.getText();
+                        if (!actor.equals(""))
+                            map.put("actor", actor);
+
+                        t.setText("저장 완료");
+                    }
+                });
+                panel.add(tf_actor);
             }
 
             {
-            JLabel lblNewLabel_2 = new JLabel("장르명");
-            lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
-            lblNewLabel_2.setBounds(76, 129, 74, 19);
-            panel.add(lblNewLabel_2);
+                JLabel lblNewLabel_2 = new JLabel("장르명");
+                lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+                lblNewLabel_2.setBounds(76, 129, 74, 19);
+                panel.add(lblNewLabel_2);
 
-            JTextField tf_genre = new JTextField();
-            tf_genre.setColumns(10);
-            tf_genre.setBounds(171, 126, 260, 19);
-            tf_genre.addActionListener(new ActionListener() {
-                @Override
-	   			public void actionPerformed(ActionEvent e) {				
-	   				
-	   				JTextField t = (JTextField)e.getSource();
-	   				String genre = t.getText();
-	   				if (!genre.equals(""))
-	   				    map.put("genre", genre);
-                    
-                    t.setText("저장 완료");
-	   			}
-            });
-            
-            panel.add(tf_genre);
+                JTextField tf_genre = new JTextField();
+                tf_genre.setColumns(10);
+                tf_genre.setBounds(171, 126, 260, 19);
+                tf_genre.addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+
+                        JTextField t = (JTextField) e.getSource();
+                        String genre = t.getText();
+                        if (!genre.equals(""))
+                            map.put("genre", genre);
+
+                        t.setText("저장 완료");
+                    }
+                });
+
+                panel.add(tf_genre);
             }
-
 
             JButton btnNewButton = new JButton("검색");
             btnNewButton.setFont(new Font("Gulim", Font.PLAIN, 17));
             btnNewButton.setBounds(233, 155, 96, 35);
             panel.add(btnNewButton);
-            
+
             scrollPane = new JScrollPane();
             contentPanel.add(scrollPane, BorderLayout.CENTER);
-         
+
             btnNewButton.addActionListener(new ActionListener() {
-                
-	   			Statement stmt = null;
+
+                Statement stmt = null;
 
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -169,37 +165,36 @@ public class SearchMovie extends JDialog
                     int count = 0;
                     int mapCount = map.size();
                     queryBuilder = new StringBuilder("SELECT * from movies ");
-                    
-                    if (!map.isEmpty()) 
+
+                    if (!map.isEmpty())
                         queryBuilder.append("where ");
-                    for (var entry : map.entrySet())
-                    {
+                    for (var entry : map.entrySet()) {
                         queryBuilder.append(entry.getKey());
                         queryBuilder.append(" = ");
                         queryBuilder.append("\'");
                         queryBuilder.append(entry.getValue());
                         queryBuilder.append("\'");
                         queryBuilder.append(" ");
-                        if (count != mapCount - 1) queryBuilder.append("and ");
+                        if (count != mapCount - 1)
+                            queryBuilder.append("and ");
                         count++;
                     }
 
                     String result = queryBuilder.toString();
                     System.out.println(result);
-                    
+
                     try {
-	   					stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-		  	  	        ResultSet rs=stmt.executeQuery(result);
-		  	  	        int resultCount = 0;
-                            
-		  	  	        while (rs.next()) {
-		  	  	            resultCount++;
-		  	  	        }
-		  	  	        
-                        
+                        stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                        ResultSet rs = stmt.executeQuery(result);
+                        int resultCount = 0;
+
+                        while (rs.next()) {
+                            resultCount++;
+                        }
+
                         if (rs == null || resultCount == 0) {
                             JOptionPane.showMessageDialog(null, "해당 영화가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-                             // ta.append("\n해당 영화가 없습니다. \n\n");
+                            // ta.append("\n해당 영화가 없습니다. \n\n");
                         } else {
                             ResultSetMetaData columns = rs.getMetaData();
                             int columnCount = columns.getColumnCount();
@@ -208,12 +203,11 @@ public class SearchMovie extends JDialog
                             for (int i = 2; i <= columnCount; i++) {
                                 resultModel.addColumn(columns.getColumnName(i));
                             }
-                            
+
                             rs.first();
                             movieIds = new ArrayList<Integer>();
-                            
-                            for (int i = 0; i < resultCount; i++)
-                            {
+
+                            for (int i = 0; i < resultCount; i++) {
                                 movieIds.add(rs.getInt(1));
                                 // resultModel.setValueAt(rs.getInt(1), i, 1);
                                 for (int j = 2; j <= columnCount; j++) {
@@ -221,15 +215,14 @@ public class SearchMovie extends JDialog
                                 }
                                 rs.next();
                             }
-                            
+
                             var wrapperModel = new TableResult(resultModel, "선택");
                             resultTable = new JTable(wrapperModel);
                             scrollPane.setViewportView(resultTable);
-                        }                   
-	   				} 
-                    catch (SQLException e1) {
-                           JOptionPane.showMessageDialog(null, "SQL문 실행 오류");
-                           e1.printStackTrace();
+                        }
+                    } catch (SQLException e1) {
+                        JOptionPane.showMessageDialog(null, "SQL문 실행 오류");
+                        e1.printStackTrace();
                     }
 
                     resultTable.setVisible(true);
@@ -251,19 +244,20 @@ public class SearchMovie extends JDialog
                         int lastSelectIdx = -1;
                         try {
                             for (int i = 0; i < rowCount; i++) {
-                                if (Boolean.TRUE.equals((boolean)resultTable.getValueAt(i, 0))) {
+                                if (Boolean.TRUE.equals((boolean) resultTable.getValueAt(i, 0))) {
                                     selectCount++;
                                     lastSelectIdx = i;
                                 }
-                                if (selectCount > 1) throw new Exception("한 번에 한 개의 영화만 예약할 수 있습니다.");
+                                if (selectCount > 1)
+                                    throw new Exception("한 번에 한 개의 영화만 예약할 수 있습니다.");
 
                             }
                             if (selectCount == 0 && lastSelectIdx == -1)
                                 throw new Exception("영화를 선택하십시오.");
                             else {
                                 // 상영 시간 표시 테이블 창 표시
-                               // 영화 예매하기
-                               int colCount = resultTable.getColumnCount() - 1;
+                                // 영화 예매하기
+                                int colCount = resultTable.getColumnCount() - 1;
                                 Object[] target = new Object[colCount];
                                 for (int i = 1; i < colCount; i++) {
                                     target[i] = resultTable.getValueAt(lastSelectIdx, i); // !
@@ -273,9 +267,7 @@ public class SearchMovie extends JDialog
                                 selScheduleWindow.setVisible(true);
                             }
                         } catch (Exception err) {
-                            JOptionPane.showMessageDialog(null,
-                                    err.getMessage(), "Message",
-                                    JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(null, err.getMessage(), "Message", JOptionPane.ERROR_MESSAGE);
                             err.printStackTrace();
                         }
                     }

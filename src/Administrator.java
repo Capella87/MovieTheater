@@ -18,14 +18,13 @@ import java.awt.GridLayout;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
-public class Administrator extends JDialog
-{
+public class Administrator extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     private Database db;
-    
+
     class Action_modify implements ActionListener {
-        
+
         @Override
         public void actionPerformed(ActionEvent e) {
             Modify sub = new Modify(db);
@@ -34,11 +33,10 @@ public class Administrator extends JDialog
             sub.toFront();
             sub.requestFocus();
         }
-        
-     }
-    
-    public Administrator(Database db)
-    {
+
+    }
+
+    public Administrator(Database db) {
         setTitle("관리자 패널");
         this.db = db;
         setBounds(100, 100, 617, 436);
@@ -59,22 +57,21 @@ public class Administrator extends JDialog
             btnNewButton.setActionCommand("");
             btnNewButton.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
-                    JButton sour = (JButton)e.getSource();
+                    JButton sour = (JButton) e.getSource();
                     if (sour.getText().equals("초기화")) {
                         try {
                             boolean rt = db.resetDatabase();
-                            if (rt == false) throw new Exception();
-                            JOptionPane.showMessageDialog(btnNewButton,
-                                    "초기화에 성공했습니다.", "Message",
+                            if (rt == false)
+                                throw new Exception();
+                            JOptionPane.showMessageDialog(btnNewButton, "초기화에 성공했습니다.", "Message",
                                     JOptionPane.INFORMATION_MESSAGE);
-                        }
-                        catch (Exception ee) {
-                            JOptionPane.showMessageDialog(btnNewButton, "초기화에 실패했습니다.", "Error", JOptionPane.ERROR_MESSAGE);
+                        } catch (Exception ee) {
+                            JOptionPane.showMessageDialog(btnNewButton, "초기화에 실패했습니다.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
                         }
 
-                        
                     }
-                    
+
                 }
             });
             btnNewButton.setBounds(85, 171, 94, 55);
@@ -82,8 +79,7 @@ public class Administrator extends JDialog
         }
         {
             JButton btnNewButton = new JButton("DB 수정");
-            btnNewButton.addActionListener(new Action_modify()
-            );
+            btnNewButton.addActionListener(new Action_modify());
             btnNewButton.setBounds(270, 171, 94, 55);
             contentPanel.add(btnNewButton);
         }

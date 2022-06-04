@@ -11,8 +11,7 @@ import javax.swing.JLabel;
 import javax.swing.SwingConstants;
 import java.awt.Font;
 
-public class Customer extends JDialog
-{
+public class Customer extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     private Database db;
@@ -20,8 +19,7 @@ public class Customer extends JDialog
     /**
      * Create the dialog.
      */
-    public Customer(Database db)
-    {
+    public Customer(Database db) {
         this.db = db;
         setBounds(100, 100, 450, 300);
         setTitle("고객 패널");

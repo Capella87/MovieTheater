@@ -131,7 +131,8 @@ public class SearchReservation extends JDialog {
                                         resultModel.setValueAt(rs.getString(j), i, j - 1); // 주의
                                     }
                                     // t.movie_id, t.ticket_id, t.reservation_id, t.username, t.schedule_id
-                                    bookingInfoObjects.add(new Object[] { (Object)rs.getInt(columnCount - 4), (Object)rs.getInt(columnCount - 3), (Object) rs.getInt(columnCount - 2),
+                                    bookingInfoObjects.add(new Object[] { (Object) rs.getInt(columnCount - 4),
+                                            (Object) rs.getInt(columnCount - 3), (Object) rs.getInt(columnCount - 2),
                                             (Object) rs.getString(columnCount - 1), (Object) rs.getInt(columnCount) });
                                     rs.next();
                                 }
@@ -139,23 +140,24 @@ public class SearchReservation extends JDialog {
                                 wrapperModel = new TableResult(resultModel, "선택");
                                 resultTable = new JTable(wrapperModel);
                                 resultTable.addMouseListener(new MouseAdapter() {
-                                     
+
                                     int lastSelectedIdx;
                                     int clickCounts = 0;
 
-                                    public void mouseClicked (MouseEvent e) {
-                                        var target = (JTable)e.getSource();
-                                        if (target.getSelectedColumn() == 0) return; // Ignore first column.
+                                    public void mouseClicked(MouseEvent e) {
+                                        var target = (JTable) e.getSource();
+                                        if (target.getSelectedColumn() == 0)
+                                            return; // Ignore first column.
 
                                         if (e.getClickCount() == 2) {
-                                             var info = new ReservationInfo(db, bookingInfoObjects.get(lastSelectedIdx));
-                                             info.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
-                                             info.setVisible(true);
+                                            var info = new ReservationInfo(db, bookingInfoObjects.get(lastSelectedIdx));
+                                            info.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                                            info.setVisible(true);
                                         }
                                     }
                                 });
                                 scrollPane.setViewportView(resultTable);
-                                
+
                                 t.setText("저장 완료");
                                 resultTable.setVisible(true);
                             }
@@ -178,52 +180,51 @@ public class SearchReservation extends JDialog {
                     buttonPane.add(cancelReservationButton);
                     cancelReservationButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            if (wrapperModel == null || resultTable == null) return;
-                            
+                            if (wrapperModel == null || resultTable == null)
+                                return;
+
                             try {
                                 int rowCount = resultTable.getRowCount();
                                 int lastSelectedIdx = -1;
                                 int selectedCount = 0;
-                                
+
                                 for (int i = 0; i < rowCount; i++) {
-                                    Boolean isSelected = (Boolean)resultTable.getValueAt(i, 0);
-                                    
+                                    Boolean isSelected = (Boolean) resultTable.getValueAt(i, 0);
+
                                     if (isSelected && selectedCount == 0) {
                                         lastSelectedIdx = i;
                                         selectedCount++;
-                                    }
-                                    else if (isSelected && selectedCount > 0) {
+                                    } else if (isSelected && selectedCount > 0) {
                                         throw new MultipleSelectedException("한 개만 선택할 수 있습니다.");
                                     }
                                 }
                                 if (lastSelectedIdx == -1) {
-                                    JOptionPane.showMessageDialog(null, "영화를 선택하십시오.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "영화를 선택하십시오.", "ERROR",
+                                            JOptionPane.ERROR_MESSAGE);
                                     return;
-                                }
-                                else {
+                                } else {
                                     try {
                                         // 예매 취소; 테이블에 있는 튜플 정보로 SQL로 검색해 해당 정보 삭제
-                                        var builder = new StringBuilder("delete from reservations where reservation_id = ");
-                                        builder.append((Integer)bookingInfoObjects.get(lastSelectedIdx)[2]);
-                                        var stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                                        var builder = new StringBuilder(
+                                                "delete from reservations where reservation_id = ");
+                                        builder.append((Integer) bookingInfoObjects.get(lastSelectedIdx)[2]);
+                                        var stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
+                                                ResultSet.CONCUR_READ_ONLY);
                                         int isConverted = stmt.executeUpdate(builder.toString());
                                         // 예매 취소 완료
-                                        if (isConverted == 1)
-                                        {
+                                        if (isConverted == 1) {
                                             JOptionPane.showMessageDialog(null, "예매가 정상적으로 취소되었습니다.", "알림",
                                                     JOptionPane.INFORMATION_MESSAGE);
-                                            wrapperModel.removeRow(lastSelectedIdx);   
-                                        }
-                                        else throw new Exception();
-                                    }
-                                    catch (Exception err) {
+                                            wrapperModel.removeRow(lastSelectedIdx);
+                                        } else
+                                            throw new Exception();
+                                    } catch (Exception err) {
                                         JOptionPane.showMessageDialog(null, "예매 취소 실패", "ERROR",
                                                 JOptionPane.ERROR_MESSAGE);
                                         err.printStackTrace();
                                     }
                                 }
-                            }
-                            catch (MultipleSelectedException err) {
+                            } catch (MultipleSelectedException err) {
                                 JOptionPane.showMessageDialog(null, err.getMessage(), "ERROR",
                                         JOptionPane.ERROR_MESSAGE);
                                 err.printStackTrace();
@@ -236,43 +237,42 @@ public class SearchReservation extends JDialog {
                     buttonPane.add(changeMovieButton);
                     changeMovieButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            if (wrapperModel == null || resultTable == null) return;
-                            
+                            if (wrapperModel == null || resultTable == null)
+                                return;
+
                             try {
                                 int rowCount = resultTable.getRowCount();
                                 int lastSelectedIdx = -1;
                                 int selectedCount = 0;
-                                
+
                                 for (int i = 0; i < rowCount; i++) {
-                                    Boolean isSelected = (Boolean)resultTable.getValueAt(i, 0);
-                                    
+                                    Boolean isSelected = (Boolean) resultTable.getValueAt(i, 0);
+
                                     if (isSelected && selectedCount == 0) {
                                         lastSelectedIdx = i;
                                         selectedCount++;
-                                    }
-                                    else if (isSelected && selectedCount > 0) {
+                                    } else if (isSelected && selectedCount > 0) {
                                         throw new MultipleSelectedException("한 개만 선택할 수 있습니다.");
                                     }
                                 }
                                 if (lastSelectedIdx == -1) {
-                                    JOptionPane.showMessageDialog(null, "영화를 선택하십시오.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "영화를 선택하십시오.", "ERROR",
+                                            JOptionPane.ERROR_MESSAGE);
                                     return;
-                                }
-                                else {
+                                } else {
                                     try {
                                         // 예매 변경; 테이블에 있는 튜플 정보로 SQL로 검색해 찾고 다른 영화를 검색; 다른 영화가 없는 경우 메시지 띄우고 종료
-                                        var choose = new ChooseAnotherMovie(db, bookingInfoObjects.get(lastSelectedIdx));
+                                        var choose = new ChooseAnotherMovie(db,
+                                                bookingInfoObjects.get(lastSelectedIdx));
                                         choose.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
                                         choose.setVisible(true);
-                                    }
-                                    catch (Exception err) {
+                                    } catch (Exception err) {
                                         JOptionPane.showMessageDialog(null, "예매 변경 실패", "ERROR",
                                                 JOptionPane.ERROR_MESSAGE);
                                         err.printStackTrace();
                                     }
                                 }
-                            }
-                            catch (MultipleSelectedException err) {
+                            } catch (MultipleSelectedException err) {
                                 JOptionPane.showMessageDialog(null, err.getMessage(), "ERROR",
                                         JOptionPane.ERROR_MESSAGE);
                                 err.printStackTrace();
@@ -284,43 +284,42 @@ public class SearchReservation extends JDialog {
                     JButton changeScheduleButton = new JButton("다른 일정으로 변경");
                     changeScheduleButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            if (wrapperModel == null || resultTable == null) return;
-                            
+                            if (wrapperModel == null || resultTable == null)
+                                return;
+
                             try {
                                 int rowCount = resultTable.getRowCount();
                                 int lastSelectedIdx = -1;
                                 int selectedCount = 0;
-                                
+
                                 for (int i = 0; i < rowCount; i++) {
-                                    Boolean isSelected = (Boolean)resultTable.getValueAt(i, 0);
-                                    
+                                    Boolean isSelected = (Boolean) resultTable.getValueAt(i, 0);
+
                                     if (isSelected && selectedCount == 0) {
                                         lastSelectedIdx = i;
                                         selectedCount++;
-                                    }
-                                    else if (isSelected && selectedCount > 0) {
+                                    } else if (isSelected && selectedCount > 0) {
                                         throw new MultipleSelectedException("한 개만 선택할 수 있습니다.");
                                     }
                                 }
                                 if (lastSelectedIdx == -1) {
-                                    JOptionPane.showMessageDialog(null, "영화를 선택하십시오.", "ERROR", JOptionPane.ERROR_MESSAGE);
+                                    JOptionPane.showMessageDialog(null, "영화를 선택하십시오.", "ERROR",
+                                            JOptionPane.ERROR_MESSAGE);
                                     return;
-                                }
-                                else {
+                                } else {
                                     try {
                                         // 예매 변경; 테이블에 있는 튜플 정보로 SQL로 검색해 찾고 다른 일정을 검색; 같은 영화인 다른 일정이 없는 경우 메시지 띄우고 종료
-                                        var choose = new ChooseAnotherSchedule(db, bookingInfoObjects.get(lastSelectedIdx));
+                                        var choose = new ChooseAnotherSchedule(db,
+                                                bookingInfoObjects.get(lastSelectedIdx));
                                         choose.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
                                         choose.setVisible(true);
-                                    }
-                                    catch (Exception err) {
+                                    } catch (Exception err) {
                                         JOptionPane.showMessageDialog(null, "예매 변경 실패", "ERROR",
                                                 JOptionPane.ERROR_MESSAGE);
                                         err.printStackTrace();
                                     }
                                 }
-                            }
-                            catch (MultipleSelectedException err) {
+                            } catch (MultipleSelectedException err) {
                                 JOptionPane.showMessageDialog(null, err.getMessage(), "ERROR",
                                         JOptionPane.ERROR_MESSAGE);
                                 err.printStackTrace();
@@ -334,7 +333,7 @@ public class SearchReservation extends JDialog {
                     cancelButton.setActionCommand("Cancel");
                     cancelButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            dispose(); 
+                            dispose();
                         }
                     });
                     buttonPane.add(cancelButton);
