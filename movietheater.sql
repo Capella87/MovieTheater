@@ -132,7 +132,7 @@ ALTER TABLE tickets
 
 ALTER TABLE tickets
     ADD CONSTRAINT FK_tickets_seat_id_seats_seat_id FOREIGN KEY (seat_id)
-        REFERENCES seats (seat_id) ON DELETE RESTRICT ON UPDATE RESTRICT;
+        REFERENCES seats (seat_id) ON DELETE CASCADE ON UPDATE CASCADE;
 
 ALTER TABLE tickets
     ADD CONSTRAINT FK_tickets_reservation_id_reservations_reservation_id FOREIGN KEY (reservation_id)
