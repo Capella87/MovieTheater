@@ -89,9 +89,9 @@ public class SearchReservation extends JDialog {
                         username = t.getText();
 
                         querybBuilder = new StringBuilder(
-                                "select m.name, sc.date, sc.start_time, t.theater_id, t.seat_id, t.sale_price, t.movie_id, t.ticket_id, t.reservation_id, t.username "
-                                        + "from tickets t, movies m, madang.schedules sc, reservations re "
-                                        + "where  t.movie_id = m.movie_id and t.schedule_id = sc.schedule_id and re.reservation_id = t.reservation_id");
+                                "select m.name, sc.date, sc.start_time, t.theater_id, t.seat_id, t.sale_price, t.movie_id, t.ticket_id, t.reservation_id, t.username, t.schedule_id"
+                                        + " from tickets t, movies m, madang.schedules sc, reservations re "
+                                        + "where t.movie_id = m.movie_id and t.schedule_id = sc.schedule_id and re.reservation_id = t.reservation_id");
                         checkUserquery = new StringBuilder(" and re.username = ");
                         checkUserquery.append("\'");
                         checkUserquery.append(username);
@@ -120,19 +120,19 @@ public class SearchReservation extends JDialog {
 
                                 var resultModel = new DefaultTableModel(resultCount, 0);
 
-                                for (int i = 1; i <= columnCount - 4; i++) {//
+                                for (int i = 1; i <= columnCount - 5; i++) {//
                                     resultModel.addColumn(columns.getColumnName(i));
                                 }
 
                                 rs.first();
 
                                 for (int i = 0; i < resultCount; i++) { //
-                                    for (int j = 1; j <= columnCount - 4; j++) {
+                                    for (int j = 1; j <= columnCount - 5; j++) {
                                         resultModel.setValueAt(rs.getString(j), i, j - 1); // 주의
                                     }
                                     // t.movie_id, t.reservation_id, t.username
-                                    bookingInfoObjects.add(new Object[] { (Object)rs.getInt(columnCount - 3), (Object) rs.getInt(columnCount - 2),
-                                            (Object) rs.getInt(columnCount - 1), (Object) rs.getString(columnCount) });
+                                    bookingInfoObjects.add(new Object[] { (Object)rs.getInt(columnCount - 4), (Object)rs.getInt(columnCount - 3), (Object) rs.getInt(columnCount - 2),
+                                            (Object) rs.getString(columnCount - 1), (Object) rs.getInt(columnCount) });
                                     rs.next();
                                 }
 
@@ -230,7 +230,7 @@ public class SearchReservation extends JDialog {
                     });
                 }
                 {
-                    JButton changeMovieButton = new JButton("다른 영화로 변경 ");
+                    JButton changeMovieButton = new JButton("다른 영화로 변경");
                     buttonPane.add(changeMovieButton);
                     changeMovieButton.addActionListener(new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
@@ -309,11 +309,9 @@ public class SearchReservation extends JDialog {
                                 else {
                                     try {
                                         // 예매 변경; 테이블에 있는 튜플 정보로 SQL로 검색해 찾고 다른 일정을 검색; 같은 영화인 다른 일정이 없는 경우 메시지 띄우고 종료
-                                        
-                                        // 예매 변경 완료
-                                        JOptionPane.showMessageDialog(null, "예매가 정상적으로 변경되었습니다.", "알림",
-                                                JOptionPane.INFORMATION_MESSAGE);
-                                        wrapperModel.removeRow(lastSelectedIdx);
+                                        var choose = new ChooseAnotherSchedule(db, bookingInfoObjects.get(lastSelectedIdx));
+                                        choose.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                                        choose.setVisible(true);
                                     }
                                     catch (Exception err) {
                                         JOptionPane.showMessageDialog(null, "예매 변경 실패", "ERROR",
