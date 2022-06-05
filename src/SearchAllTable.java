@@ -27,7 +27,7 @@ public class SearchAllTable extends JDialog {
         this.db = new Database();
 
         setTitle("모든 테이블 조회");
-        setBounds(100, 100, 552, 400);
+        setBounds(100, 100, 671, 530);
         getContentPane().setLayout(new BorderLayout());
         {
             JTabbedPane tabbedPane = new JTabbedPane(JTabbedPane.TOP);
