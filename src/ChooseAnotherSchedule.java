@@ -61,6 +61,7 @@ public class ChooseAnotherSchedule extends JDialog {
 
             int altScheduleCount = 0;
             var statement = this.db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            System.out.println(getAltSchedule.toString());
             ResultSet getSchedules = statement.executeQuery(getAltSchedule.toString());
 
             while (getSchedules.next()) {
@@ -68,7 +69,7 @@ public class ChooseAnotherSchedule extends JDialog {
             }
 
             if (getSchedules == null || altScheduleCount == 0) {
-                JOptionPane.showMessageDialog(null, "해당 영화가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, "해당 영화의 다른 일정이 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
                 dispose(); // 화면 닫기
             } else {
                 ResultSetMetaData columns = getSchedules.getMetaData();
@@ -99,6 +100,7 @@ public class ChooseAnotherSchedule extends JDialog {
             }
 
         } catch (SQLException e) {
+            JOptionPane.showMessageDialog(null, "SQL문 실행 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
 
@@ -149,6 +151,7 @@ public class ChooseAnotherSchedule extends JDialog {
                                             "SELECT t.seat_count FROM theaters t WHERE t.theater_id = (SELECT theater_id FROM schedules where schedule_id = ");
                                     q.append((Integer) altScheduleInfo.get(lastSelectedIdx)[0]);
                                     q.append(')');
+                                    System.out.println(q.toString());
                                     ResultSet getTotalSeats = st.executeQuery(q.toString());
                                     int totalSeats = 0;
                                     getTotalSeats.first();
@@ -157,7 +160,8 @@ public class ChooseAnotherSchedule extends JDialog {
                                     StringBuilder q2 = new StringBuilder(
                                             "SELECT count(*) as 'count' FROM tickets t, schedules s WHERE t.schedule_id = s.schedule_id and t.schedule_id = ");
                                     q2.append(Integer.toString((Integer) altScheduleInfo.get(lastSelectedIdx)[0]));
-
+                                    
+                                    System.out.println(q2.toString());
                                     ResultSet getUnavailableSeats = st.executeQuery(q2.toString());
                                     getUnavailableSeats.first();
                                     int availableSeats = totalSeats - getUnavailableSeats.getInt("count");
@@ -174,6 +178,7 @@ public class ChooseAnotherSchedule extends JDialog {
                                         var q3 = new StringBuilder(
                                                 "SELECT s.theater_id FROM schedules s where s.schedule_id = ");
                                         q3.append(altScheduleInfo.get(lastSelectedIdx)[0]);
+                                        System.out.println(q3.toString());
                                         ResultSet whereIs = st.executeQuery(q3.toString());
                                         whereIs.first();
                                         int theater = whereIs.getInt("s.theater_id");
@@ -182,6 +187,7 @@ public class ChooseAnotherSchedule extends JDialog {
                                                 "SELECT s.seat_id FROM seats s WHERE s.theater_id = ");
                                         q4.append(theater);
                                         q4.append(" ORDER BY s.seat_id ASC LIMIT 1");
+                                        System.out.println(q4.toString());
                                         ResultSet offset = st.executeQuery(q4.toString());
                                         offset.first();
                                         int begin = offset.getInt("s.seat_id");
@@ -195,7 +201,7 @@ public class ChooseAnotherSchedule extends JDialog {
                                         q5.append(" and schedule_id = ");
                                         q5.append(Integer.toString((Integer) altScheduleInfo.get(lastSelectedIdx)[0]));
                                         q5.append(" GROUP BY schedule_id");
-
+                                        System.out.println(q5.toString());
                                         ResultSet getOccupied = statement.executeQuery(q5.toString());
 
                                         if (!getOccupied.next()) {
@@ -213,14 +219,14 @@ public class ChooseAnotherSchedule extends JDialog {
                                     getAltSchedule.append(" WHERE ticket_id = ");
                                     getAltSchedule.append((Integer) bookingInfo[1]);
 
-                                    int altScheduleCount = 0;
                                     var statement = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                                             ResultSet.CONCUR_READ_ONLY);
+                                    System.out.println(getAltSchedule.toString());
                                     var isUpdated = statement.executeUpdate(getAltSchedule.toString());
                                     if (isUpdated < 1)
                                         throw new Exception();
                                     else {
-                                        JOptionPane.showMessageDialog(null, "예매 변경 성공", "안내",
+                                        JOptionPane.showMessageDialog(null, "예매 변경 성공. 검색에서 username을 다시 입력하시면 바뀌어 있을 겁니다.", "안내",
                                                 JOptionPane.INFORMATION_MESSAGE);
                                         dispose();
                                     }
