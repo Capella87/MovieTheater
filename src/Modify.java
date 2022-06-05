@@ -53,7 +53,7 @@ public class Modify extends JDialog {
 
                 JTextField t = (JTextField) e.getSource();
                 SQL_oper = t.getText();
-                t.setText("");
+                t.setText("작업 저장 완료");
 
                 // 1 : 삽입, 2 : 삭제, 3 : 변경
                 if (SQL_oper.equals("insert") | SQL_oper.equals("INSERT")) {
@@ -78,7 +78,7 @@ public class Modify extends JDialog {
 
                 JTextField t = (JTextField) e.getSource();
                 SQL_table = t.getText();
-                t.setText("");
+                t.setText("테이블 저장 완료");
 
                 if (SQL_table.equals("movies")) {
                     if (opernum == 1) {
@@ -158,12 +158,8 @@ public class Modify extends JDialog {
                 } catch (Exception e1) {
                     JOptionPane.showMessageDialog(null, "SQL문 실행 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
                     e1.printStackTrace();
-                }
-                /*
-                 * catch (SQLException e2) { JOptionPane.showMessageDialog(null, "SQL문 실행 오류",
-                 * "ERROR", JOptionPane.ERROR_MESSAGE); e2.printStackTrace(); }
-                 */
-                t.setText("");
+                }          
+                t.setText("쿼리 실행 완료");
             }
         });
 
