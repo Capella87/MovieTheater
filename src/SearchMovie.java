@@ -28,6 +28,7 @@ public class SearchMovie extends JDialog {
         map = new HashMap<String, String>();
 
         setBounds(100, 100, 582, 432);
+        setTitle("영화 조회");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         getContentPane().setLayout(new BorderLayout());
         contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -166,19 +167,21 @@ public class SearchMovie extends JDialog {
                     int mapCount = map.size();
                     queryBuilder = new StringBuilder("SELECT * from movies ");
 
-                    if (!map.isEmpty())
+                    // if (!map.isEmpty())
                         queryBuilder.append("where ");
                     for (var entry : map.entrySet()) {
                         queryBuilder.append(entry.getKey());
-                        queryBuilder.append(" = ");
-                        queryBuilder.append("\'");
+                        queryBuilder.append(" like ");
+                        queryBuilder.append("\'%");
                         queryBuilder.append(entry.getValue());
-                        queryBuilder.append("\'");
+                        queryBuilder.append("%\'");
                         queryBuilder.append(" ");
-                        if (count != mapCount - 1)
-                            queryBuilder.append("and ");
+                        // if (count != mapCount - 1)
+                        queryBuilder.append("and ");
                         count++;
                     }
+                    queryBuilder.append("movies.movie_id in (SELECT s.movie_id FROM schedules s WHERE DATE(s.date) >= ");
+                    queryBuilder.append("\'2021-01-01\')");
 
                     String result = queryBuilder.toString();
                     System.out.println(result);
@@ -194,7 +197,8 @@ public class SearchMovie extends JDialog {
 
                         if (rs == null || resultCount == 0) {
                             JOptionPane.showMessageDialog(null, "해당 영화가 없습니다.", "알림", JOptionPane.INFORMATION_MESSAGE);
-                            // ta.append("\n해당 영화가 없습니다. \n\n");
+                            map.clear();
+                            return;
                         } else {
                             ResultSetMetaData columns = rs.getMetaData();
                             int columnCount = columns.getColumnCount();
@@ -209,7 +213,6 @@ public class SearchMovie extends JDialog {
 
                             for (int i = 0; i < resultCount; i++) {
                                 movieIds.add(rs.getInt(1));
-                                // resultModel.setValueAt(rs.getInt(1), i, 1);
                                 for (int j = 2; j <= columnCount; j++) {
                                     resultModel.setValueAt(rs.getString(j), i, j - 2); // 주의
                                 }
@@ -221,7 +224,7 @@ public class SearchMovie extends JDialog {
                             scrollPane.setViewportView(resultTable);
                         }
                     } catch (SQLException e1) {
-                        JOptionPane.showMessageDialog(null, "SQL문 실행 오류");
+                        JOptionPane.showMessageDialog(null, "SQL문 실행 오류", "ERROR", JOptionPane.ERROR_MESSAGE);
                         e1.printStackTrace();
                     }
 

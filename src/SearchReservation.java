@@ -96,13 +96,14 @@ public class SearchReservation extends JDialog {
                         checkUserquery.append("\'");
                         checkUserquery.append(username);
                         checkUserquery.append("\'");
+                        checkUserquery.append(" and DATE(sc.date) >= \'2021-01-01\'");
                         querybBuilder.append(checkUserquery.toString());
 
                         String result = querybBuilder.toString();
 
                         try {
                             stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
-
+                            System.out.println(result);
                             ResultSet rs = stmt.executeQuery(result);
                             int resultCount = 0;
 
@@ -210,6 +211,8 @@ public class SearchReservation extends JDialog {
                                         builder.append((Integer) bookingInfoObjects.get(lastSelectedIdx)[2]);
                                         var stmt = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                                                 ResultSet.CONCUR_READ_ONLY);
+                                        System.out.println(builder.toString());
+                                        bookingInfoObjects.remove(lastSelectedIdx);
                                         int isConverted = stmt.executeUpdate(builder.toString());
                                         // 예매 취소 완료
                                         if (isConverted == 1) {
