@@ -53,8 +53,9 @@ public class Modify extends JDialog {
 
                 JTextField t = (JTextField) e.getSource();
                 SQL_oper = t.getText();
-                t.setText("작업 저장 완료");
-
+                
+                int flag = 1;
+               
                 // 1 : 삽입, 2 : 삭제, 3 : 변경
                 if (SQL_oper.equals("insert") | SQL_oper.equals("INSERT")) {
                     opernum = 1;
@@ -62,6 +63,14 @@ public class Modify extends JDialog {
                     opernum = 2;
                 } else if (SQL_oper.equals("update") | SQL_oper.equals("UPDATE")) {
                     opernum = 3;
+                } else {
+                	flag = 0;
+                }
+                
+                if (flag == 1) {
+                	t.setText("작업 저장 완료");
+                } else {
+                	t.setText("잘못된 명령어 입력.");
                 }
             }
 
@@ -78,8 +87,9 @@ public class Modify extends JDialog {
 
                 JTextField t = (JTextField) e.getSource();
                 SQL_table = t.getText();
-                t.setText("테이블 저장 완료");
-
+                
+                int flag = 1;
+              
                 if (SQL_table.equals("movies")) {
                     if (opernum == 1) {
                         SQL_table = "insert into movies ";
@@ -136,6 +146,13 @@ public class Modify extends JDialog {
                     } else if (opernum == 3) {
                         SQL_table = "update tickets ";
                     }
+                } else flag = 0;
+                
+                
+                if (flag == 1) {
+                	t.setText("작업 저장 완료");
+                } else {
+                	t.setText("존재하지 않는 테이블 입력.");
                 }
             }
         });
