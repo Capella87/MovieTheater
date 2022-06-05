@@ -55,8 +55,8 @@ class Database {
         }
 
         String[] resetCommands = { "DROP TABLE IF EXISTS tickets;", "DROP TABLE IF EXISTS reservations;",
-                "DROP TABLE IF EXISTS seats;", "DROP TABLE IF EXISTS seats;", "DROP TABLE IF EXISTS schedules;",
-                "DROP TABLE IF EXISTS members;", "DROP TABLE IF EXISTS theaters;", "DROP TABLE IF EXISTS movies;",
+                "DROP TABLE IF EXISTS seats;", "DROP TABLE IF EXISTS schedules;", "DROP TABLE IF EXISTS members;",
+                "DROP TABLE IF EXISTS theaters;", "DROP TABLE IF EXISTS movies;",
                 "CREATE TABLE movies\r\n" + "(\r\n"
                         + "    `movie_id`      INT            NOT NULL    AUTO_INCREMENT,\r\n"
                         + "    `name`          VARCHAR(45)    NULL,\r\n"
@@ -69,25 +69,32 @@ class Database {
                         + "    `release_date`  VARCHAR(45)    NULL,\r\n" + "     PRIMARY KEY (movie_id)\r\n" + ");",
                 "CREATE TABLE theaters\r\n" + "(\r\n"
                         + "    `theater_id`  INT            NOT NULL    AUTO_INCREMENT,\r\n"
-                        + "    `seat_count`  INT            NULL,\r\n" + "    `status`      VARCHAR(45)    NULL,\r\n"
-                        + "     PRIMARY KEY (theater_id)\r\n" + ");",
+                        + "    `movie_id`    INT            NULL,\r\n" + "    `seat_count`  INT            NULL,\r\n"
+                        + "    `status`      VARCHAR(45)    NULL,\r\n" + "     PRIMARY KEY (theater_id)\r\n" + ");",
+                "ALTER TABLE theaters\r\n"
+                        + "    ADD CONSTRAINT FK_theaters_movie_id_movies_movie_id FOREIGN KEY (movie_id)\r\n"
+                        + "        REFERENCES movies (movie_id) ON DELETE RESTRICT ON UPDATE RESTRICT;",
                 "CREATE TABLE members\r\n" + "(\r\n" + "    `member_id`  INT            NOT NULL    AUTO_INCREMENT,\r\n"
-                        + "    `username`   VARCHAR(45)    NOT NULL    UNIQUE,\r\n"
-                        + "    `name`       VARCHAR(45)    NULL,\r\n" + "    `tel`        VARCHAR(45)    NULL,\r\n"
-                        + "    `email`      VARCHAR(45)    NULL,\r\n" + "     PRIMARY KEY (member_id, username)\r\n"
-                        + ");",
+                        + "    `username`   VARCHAR(45)    UNIQUE,\r\n" + "    `name`       VARCHAR(45)    NULL,\r\n"
+                        + "    `tel`        VARCHAR(45)    NULL,\r\n" + "    `email`      VARCHAR(45)    NULL,\r\n"
+                        + "     PRIMARY KEY (member_id, username)\r\n" + ");",
                 "CREATE TABLE reservations\r\n" + "(\r\n"
                         + "    `reservation_id`  INT            NOT NULL    AUTO_INCREMENT,\r\n"
+                        + "    `username`        VARCHAR(45)    NULL,\r\n"
                         + "    `pay_method`      VARCHAR(45)    NULL,\r\n"
                         + "    `pay_status`      VARCHAR(45)    NULL,\r\n"
                         + "    `pay_price`       VARCHAR(45)    NULL,\r\n"
-                        + "    `username`        VARCHAR(45)    NOT NULL,\r\n"
                         + "    `pay_date`        VARCHAR(45)    NULL,\r\n" + "     PRIMARY KEY (reservation_id)\r\n"
                         + ");",
                 "ALTER TABLE reservations\r\n"
                         + "    ADD CONSTRAINT FK_reservations_username_members_username FOREIGN KEY (username)\r\n"
-                        + "        REFERENCES members (username) ON DELETE RESTRICT ON UPDATE RESTRICT;",
-
+                        + "        REFERENCES members (username) ON DELETE CASCADE ON UPDATE CASCADE;\r\n",
+                "CREATE TABLE seats\r\n" + "(\r\n" + "    `seat_id`     INT            NOT NULL    AUTO_INCREMENT,\r\n"
+                        + "    `theater_id`  INT            NULL,\r\n" + "    `status`      VARCHAR(45)    NULL,\r\n"
+                        + "     PRIMARY KEY (seat_id)\r\n" + ");",
+                "ALTER TABLE seats\r\n"
+                        + "    ADD CONSTRAINT FK_seats_theater_id_theaters_theater_id FOREIGN KEY (theater_id)\r\n"
+                        + "        REFERENCES theaters (theater_id) ON DELETE RESTRICT ON UPDATE RESTRICT;",
                 "CREATE TABLE schedules\r\n" + "(\r\n"
                         + "    `schedule_id`  INT            NOT NULL    AUTO_INCREMENT,\r\n"
                         + "    `movie_id`     INT            NULL,\r\n" + "    `theater_id`   INT            NULL,\r\n"
@@ -96,36 +103,39 @@ class Database {
                         + "     PRIMARY KEY (schedule_id)\r\n" + ");",
                 "ALTER TABLE schedules\r\n"
                         + "    ADD CONSTRAINT FK_schedules_movie_id_movies_movie_id FOREIGN KEY (movie_id)\r\n"
-                        + "        REFERENCES movies (movie_id) ON DELETE RESTRICT ON UPDATE RESTRICT;",
+                        + "        REFERENCES movies (movie_id) ON DELETE CASCADE ON UPDATE CASCADE;",
                 "ALTER TABLE schedules\r\n"
                         + "    ADD CONSTRAINT FK_schedules_theater_id_theaters_theater_id FOREIGN KEY (theater_id)\r\n"
                         + "        REFERENCES theaters (theater_id) ON DELETE RESTRICT ON UPDATE RESTRICT;",
-
-                "CREATE TABLE seats\r\n" + "(\r\n" + "    `seat_id`     INT            NOT NULL    AUTO_INCREMENT,\r\n"
-                        + "    `theater_id`  INT            NULL,\r\n" + "    `status`      VARCHAR(45)    NULL,\r\n"
-                        + "     PRIMARY KEY (seat_id)\r\n" + ");",
-                "ALTER TABLE seats\r\n"
-                        + "    ADD CONSTRAINT FK_seats_theater_id_theaters_theater_id FOREIGN KEY (theater_id)\r\n"
-                        + "        REFERENCES theaters (theater_id) ON DELETE RESTRICT ON UPDATE RESTRICT;",
                 "CREATE TABLE tickets\r\n" + "(\r\n"
                         + "    `ticket_id`       INT            NOT NULL    AUTO_INCREMENT,\r\n"
-                        + "    `date_num`        VARCHAR(45)    NULL,\r\n"
+                        + "    `movie_id`        INT            NULL,\r\n"
+                        + "    `schedule_id`     INT            NULL,\r\n"
                         + "    `theater_id`      INT            NULL,\r\n"
                         + "    `seat_id`         INT            NULL,\r\n"
                         + "    `reservation_id`  INT            NULL,\r\n"
+                        + "    `username`        VARCHAR(45)    NULL,\r\n"
                         + "    `status`          VARCHAR(45)    NULL,\r\n"
                         + "    `standard_price`  VARCHAR(45)    NULL,\r\n"
                         + "    `sale_price`      VARCHAR(45)    NULL,\r\n" + "     PRIMARY KEY (ticket_id)\r\n" + ");",
                 "ALTER TABLE tickets\r\n"
+                        + "    ADD CONSTRAINT FK_tickets_schedule_id_schedules_schedule_id FOREIGN KEY (schedule_id)\r\n"
+                        + "        REFERENCES schedules (schedule_id) ON DELETE CASCADE ON UPDATE CASCADE;",
+                "ALTER TABLE tickets\r\n"
                         + "    ADD CONSTRAINT FK_tickets_theater_id_theaters_theater_id FOREIGN KEY (theater_id)\r\n"
                         + "        REFERENCES theaters (theater_id) ON DELETE RESTRICT ON UPDATE RESTRICT;",
-
                 "ALTER TABLE tickets\r\n"
                         + "    ADD CONSTRAINT FK_tickets_seat_id_seats_seat_id FOREIGN KEY (seat_id)\r\n"
-                        + "        REFERENCES seats (seat_id) ON DELETE RESTRICT ON UPDATE RESTRICT;\r\n",
+                        + "        REFERENCES seats (seat_id) ON DELETE CASCADE ON UPDATE CASCADE;",
                 "ALTER TABLE tickets\r\n"
                         + "    ADD CONSTRAINT FK_tickets_reservation_id_reservations_reservation_id FOREIGN KEY (reservation_id)\r\n"
-                        + "        REFERENCES reservations (reservation_id) ON DELETE RESTRICT ON UPDATE RESTRICT;" };
+                        + "        REFERENCES reservations (reservation_id) ON DELETE CASCADE ON UPDATE CASCADE;\r\n",
+                "ALTER TABLE tickets\r\n"
+                        + "    ADD CONSTRAINT FK_tickets_username_members_username FOREIGN KEY (username)\r\n"
+                        + "        REFERENCES members (username) ON DELETE RESTRICT ON UPDATE RESTRICT;",
+                "ALTER TABLE tickets\r\n"
+                        + "    ADD CONSTRAINT FK_tickets_movie_id_movies_movie_id FOREIGN KEY (movie_id)\r\n"
+                        + "        REFERENCES movies (movie_id) ON DELETE RESTRICT ON UPDATE RESTRICT;" };
         try {
             Statement resetStatement = this.con.createStatement();
             for (int i = 0; i < resetCommands.length; i++)
@@ -226,5 +236,18 @@ public class MovieTheater {
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
         welcomeLabel.setBounds(184, 83, 331, 35);
         panel.add(welcomeLabel);
+
+        JButton btnNewButton_2 = new JButton("Credit");
+        btnNewButton_2.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                var credit = new Credit();
+                credit.setModalityType(JDialog.ModalityType.APPLICATION_MODAL);
+                credit.setVisible(true);
+                credit.toFront();
+                credit.requestFocus();
+            }
+        });
+        btnNewButton_2.setBounds(306, 355, 98, 28);
+        panel.add(btnNewButton_2);
     }
 }
