@@ -52,6 +52,7 @@ public class ChooseAnotherMovie extends JDialog {
         scrollPane = new JScrollPane();
         altScheduleInfo = new ArrayList<Object[]>(); // 영화 id
 
+        // 다른 영화 검색하는 쿼리
         try {
             var getAltSchedule = new StringBuilder(
                     "SELECT m.name, s.theater_id, s.date, s.start_time, m.movie_id, s.schedule_id FROM schedules s, movies m "
@@ -151,7 +152,7 @@ public class ChooseAnotherMovie extends JDialog {
                                 try {
                                     var st = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                                             ResultSet.CONCUR_READ_ONLY);
-                                    // 영화가 매진된 경우
+                                    // 상영관 전체 좌석 개수 구하는 쿼리
                                     StringBuilder q = new StringBuilder(
                                             "SELECT t.seat_count FROM theaters t WHERE t.theater_id = (SELECT theater_id FROM schedules where schedule_id = ");
                                     q.append((Integer) altScheduleInfo.get(lastSelectedIdx)[0]);
@@ -162,6 +163,7 @@ public class ChooseAnotherMovie extends JDialog {
                                     getTotalSeats.first();
                                     totalSeats = getTotalSeats.getInt("t.seat_count");
 
+                                    // 현재 팔린 좌석 수 구하는 쿼리
                                     StringBuilder q2 = new StringBuilder(
                                             "SELECT count(*) as 'count' FROM tickets t, schedules s WHERE t.schedule_id = s.schedule_id and t.schedule_id = ");
                                     q2.append(Integer.toString((Integer) altScheduleInfo.get(lastSelectedIdx)[0]));
@@ -180,6 +182,7 @@ public class ChooseAnotherMovie extends JDialog {
                                     Random rand = new Random();
                                     int randomSeat = -1;
                                     while (true) {
+                                        // 상영관 id 구하는 쿼리
                                         var q3 = new StringBuilder(
                                                 "SELECT s.theater_id FROM schedules s where s.schedule_id = ");
                                         q3.append(altScheduleInfo.get(lastSelectedIdx)[0]);
@@ -188,6 +191,7 @@ public class ChooseAnotherMovie extends JDialog {
                                         whereIs.first();
                                         int theater = whereIs.getInt("s.theater_id");
 
+                                        // 상영관의 첫 좌석 id 구하는 쿼리
                                         var q4 = new StringBuilder(
                                                 "SELECT s.seat_id FROM seats s WHERE s.theater_id = ");
                                         q4.append(theater);
@@ -201,6 +205,7 @@ public class ChooseAnotherMovie extends JDialog {
                                         var statement = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                                                 ResultSet.CONCUR_READ_ONLY);
 
+                                        // 해당 좌석이 이미 점유되었는지 검색하는 쿼리; 없으면 결과 값 자체가 없음
                                         var q5 = new StringBuilder("SELECT count(*) FROM tickets WHERE seat_id = ");
                                         q5.append(Integer.toString(randomSeat));
                                         q5.append(" and schedule_id = ");
@@ -213,7 +218,7 @@ public class ChooseAnotherMovie extends JDialog {
                                             break;
                                         }
                                     }
-                                    // 예매 변경
+                                    // 예매 변경 쿼리; 다른 영화로 바꾸는 쿼리;
                                     var getAltSchedule = new StringBuilder("UPDATE tickets SET schedule_id = ");
                                     // + "WHERE schedule_id != ");
                                     getAltSchedule.append(altScheduleInfo.get(lastSelectedIdx)[0]); // 주의

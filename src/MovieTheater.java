@@ -54,6 +54,7 @@ class Database {
             return false;
         }
 
+        // 초기화 쿼리
         String[] resetCommands = { "DROP TABLE IF EXISTS tickets;", "DROP TABLE IF EXISTS reservations;",
                 "DROP TABLE IF EXISTS seats;", "DROP TABLE IF EXISTS schedules;", "DROP TABLE IF EXISTS members;",
                 "DROP TABLE IF EXISTS theaters;", "DROP TABLE IF EXISTS movies;",

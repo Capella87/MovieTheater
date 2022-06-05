@@ -52,6 +52,7 @@ public class ChooseAnotherSchedule extends JDialog {
         scrollPane = new JScrollPane();
         altScheduleInfo = new ArrayList<Object[]>();
 
+        // 다른 스케줄 검색하는 쿼리
         try {
             var getAltSchedule = new StringBuilder(
                     "SELECT theater_id, date, start_time, schedule_id FROM schedules " + "WHERE schedule_id != ");
@@ -146,7 +147,7 @@ public class ChooseAnotherSchedule extends JDialog {
                                 try {
                                     var st = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,
                                             ResultSet.CONCUR_READ_ONLY);
-                                    // 영화가 매진된 경우
+                                    
                                     StringBuilder q = new StringBuilder(
                                             "SELECT t.seat_count FROM theaters t WHERE t.theater_id = (SELECT theater_id FROM schedules where schedule_id = ");
                                     q.append((Integer) altScheduleInfo.get(lastSelectedIdx)[0]);
@@ -208,7 +209,7 @@ public class ChooseAnotherSchedule extends JDialog {
                                             break;
                                         }
                                     }
-                                    // 예매 변경
+                                    // 예매 변경; 다른 schedule로 바꾸는 쿼리
                                     var getAltSchedule = new StringBuilder("UPDATE tickets SET schedule_id = ");
                                     // + "WHERE schedule_id != ");
                                     getAltSchedule.append(altScheduleInfo.get(lastSelectedIdx)[0]); // 주의

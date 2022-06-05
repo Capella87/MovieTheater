@@ -24,6 +24,16 @@ public class ReservationInfo extends JDialog {
 
     private final JPanel contentPanel = new JPanel();
     private Database db;
+    /* 예매 정보 보여주는 쿼리
+     * 
+     * select m.name, sc.date, sc.start_time, t.theater_id, t.seat_id, t.sale_price, t.movie_id, t.ticket_id, t.reservation_id, t.username, t.schedule_id
+     * from tickets t, movies m, madang.schedules sc, reservations re 
+     * where t.movie_id = m.movie_id and t.schedule_id = sc.schedule_id and re.reservation_id = t.reservation_id and re.username = 'capella87' and DATE(sc.date) >= '2021-01-01'
+     * 
+     * 
+     * 
+     * 
+     */
     private StringBuilder queryBuilder = new StringBuilder(
             "select s.*, t.ticket_id, t.seat_id, t.reservation_id, t.username, t.status, t.standard_price, t.sale_price from schedules s, tickets t where s.schedule_id = ");
     private String result;

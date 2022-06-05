@@ -108,6 +108,7 @@ public class SelectSchedule extends JDialog {
 
             JLabel lblNewLabel = null;
             try {
+                // 영화 제목 가져오는 쿼리
                 var statement = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 StringBuilder getTitle = new StringBuilder("SELECT name FROM movies WHERE movie_id = ");
                 getTitle.append(movieId);
@@ -127,6 +128,9 @@ public class SelectSchedule extends JDialog {
             selectSchedule.add(lblNewLabel, BorderLayout.NORTH);
             // target에서 영화 id로 시간을 조회해서 Table로 출력한다.
             try {
+                // 상영관 정보, 상영 날짜, 회차, 상영 시작 시간, 잔여 좌석 가져오는 쿼리
+                // 잔여 좌석 가져오는 쿼리는 두 개의 서브쿼리로 구현
+                // 앞의 것은 해당 상영관의 전체 좌석 수, 뒤의 것은 해당 스케줄 때 이미 점유한 좌석 수를 가져오는 쿼리이다.
                 var statement = db.con.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_READ_ONLY);
                 var searchQuery = new StringBuilder(
                         "SELECT theater_id as '관', date as '날짜', count as '회차', start_time as '시간',");
@@ -205,6 +209,7 @@ public class SelectSchedule extends JDialog {
                 btnNewButton.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
                         try {
+                            // 해당 계정의 id를 반환하는 쿼리 -> id가 있으면 로그인되고, 그렇지 않다면 결과값이 없으므로 메시지
                             var loginQuery = new StringBuilder("SELECT member_id FROM members WHERE username = \'");
                             username = textField.getText();
                             textField.setText("입력 완료");
@@ -313,6 +318,7 @@ public class SelectSchedule extends JDialog {
                                 throw new EmptyFieldException("이메일이 비어 있습니다.");
                             textField_4.setText("");
 
+                            // 해당 계정의 id를 반환하는 쿼리 -> id가 있으면 회원 가입 거부, 그렇지 않다면 결과값이 없으므로 회원 가입하는 쿼리로..
                             var checkDuplicate = new StringBuilder("SELECT member_id FROM members WHERE username = \'");
                             checkDuplicate.append(newUsername);
                             checkDuplicate.append("\'");
@@ -325,6 +331,7 @@ public class SelectSchedule extends JDialog {
                                 throw new DuplicateAccountException("이미 있는 계정입니다. 로그인해 주세요.");
                             }
 
+                            // 회원을 추가하는(회원가입) 쿼리
                             var createAccount = new StringBuilder("INSERT INTO members(");
                             createAccount.append("username, name, tel, email) VALUES(");
                             createAccount.append("\'" + newUsername + "\', ");
@@ -397,6 +404,7 @@ public class SelectSchedule extends JDialog {
             btnNewButton_2.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     try {
+                        // 예약 정보 저장하는 쿼리
                         var paymentQuery = new StringBuilder("INSERT INTO reservations ");
                         paymentQuery.append("(username, pay_method, pay_status, pay_price, pay_date) VALUES (");
                         paymentQuery.append("\'");
@@ -470,6 +478,7 @@ public class SelectSchedule extends JDialog {
                             }
                         }
 
+                        // 티켓 정보를 데이터베이스에 저장하는 쿼리
                         var ticketQuery = new StringBuilder("INSERT INTO tickets ");
                         ticketQuery.append(
                                 "(movie_id, schedule_id, theater_id, seat_id, reservation_id, username, status, standard_price, sale_price) ");
@@ -510,6 +519,7 @@ public class SelectSchedule extends JDialog {
                     }
 
                     try {
+                        // 예약 정보를 여러 테이블에서 가져오는 쿼리
                         var resultReservation = new StringBuilder(
                                 "SELECT m.name, s.date, s.start_time, t.theater_id, t.seat_id, r.username, r.pay_method, r.pay_price "
                                         + "FROM tickets t, movies m, reservations r, schedules s ");
