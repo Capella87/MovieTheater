@@ -54,6 +54,7 @@ class Database {
 			return false;
 		}
 
+
 		String[] resetCommands = { "DROP TABLE IF EXISTS tickets;\n",
 
 				"DROP TABLE IF EXISTS reservations;\n",
@@ -310,7 +311,7 @@ class Database {
 		}
 	}
 }
-
+        
 public class MovieTheater {
 
 	private JFrame frame;

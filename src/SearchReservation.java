@@ -88,6 +88,7 @@ public class SearchReservation extends JDialog {
                         JTextField t = (JTextField) e.getSource();
                         username = t.getText();
 
+                        // 예매 검색 쿼리
                         querybBuilder = new StringBuilder(
                                 "select m.name, sc.date, sc.start_time, t.theater_id, t.seat_id, t.sale_price, t.movie_id, t.ticket_id, t.reservation_id, t.username, t.schedule_id"
                                         + " from tickets t, movies m, madang.schedules sc, reservations re "
@@ -205,7 +206,7 @@ public class SearchReservation extends JDialog {
                                     return;
                                 } else {
                                     try {
-                                        // 예매 취소; 테이블에 있는 튜플 정보로 SQL로 검색해 해당 정보 삭제
+                                        // 예매 취소 쿼리; 테이블에 있는 튜플 정보로 SQL로 검색해 해당 정보 삭제
                                         var builder = new StringBuilder(
                                                 "delete from reservations where reservation_id = ");
                                         builder.append((Integer) bookingInfoObjects.get(lastSelectedIdx)[2]);

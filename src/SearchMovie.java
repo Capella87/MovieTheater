@@ -167,6 +167,10 @@ public class SearchMovie extends JDialog {
                     int mapCount = map.size();
                     queryBuilder = new StringBuilder("SELECT * from movies ");
 
+                    
+                    // 영화 검색 쿼리 
+                    // SELECT * from movies where movies.movie_id in (SELECT s.movie_id FROM schedules s WHERE DATE(s.date) >= '2021-01-01')
+
                     // if (!map.isEmpty())
                         queryBuilder.append("where ");
                     for (var entry : map.entrySet()) {
